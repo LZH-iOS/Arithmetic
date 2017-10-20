@@ -76,7 +76,7 @@ int getDuplication(const int* array, int length)
         return -1;
     }
     int  start = 1;
-    int  end = length - 1;
+    int  end = length;
     while (end > start) {
         int middle = ((end - start)>>1) + start;
         int count = countRange(array, length, start, middle);

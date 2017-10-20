@@ -22,6 +22,7 @@ struct BinaryTreeNode
     int m_nvalue;
     BinaryTreeNode*  m_pLeft;
     BinaryTreeNode*  m_pRight;
+    BinaryTreeNode*  m_pParent;
 };
 
 
@@ -84,4 +85,58 @@ BinaryTreeNode* Construct(int* preorder, int* inorder, int length)
     
     return ConstructCore(preorder, preorder + length - 1, inorder, inorder + length - 1);
 }
+
+
+/*
+ 题目：给定一颗二叉树和其中的一个节点，如何找出中序遍历序列的下一个节点？树中的节点除了有两个分别指向左、右子节点的指针，还有一个指向父节点的指针。
+ 如下图：{d, b, h, e, i, a, f, c, g}
+ 
+                [a]
+               /   \
+            [b]     [c]
+           /   \   /   \
+        [d]    [e][f]   [g]
+               / \
+            [h]   [i]
+ 关键：分为以下几种类型处理：
+        1.节点没有右子树
+            1.1节点是父节点的左子树，那么下一个节点就是父节点
+            1.2节点是父节点的右子树，那么向上查找父节点，直到找到一个是它父节点的左子节点的节点。
+        2.节点有右子树，那么下一个节点就是它右子树的最左子节点
+ */
+
+BinaryTreeNode* GetNext(BinaryTreeNode *pNode)
+{
+    if (pNode == nullptr) {
+        return nullptr;
+    }
+    
+    BinaryTreeNode* pNext = nullptr;
+    if (pNode->m_pRight != nullptr) {
+        BinaryTreeNode* pRight = pNode->m_pRight;
+        while (pRight->m_pLeft != nullptr) {
+            pRight = pRight->m_pLeft;
+        }
+        pNext = pRight;
+    } else if(pNode->m_pParent != nullptr) {
+        BinaryTreeNode* pCurrenet = pNode;
+        BinaryTreeNode* pParent = pNode->m_pParent;
+        while (pParent != nullptr && pCurrenet == pParent->m_pRight) {
+            pCurrenet = pParent;
+            pParent = pCurrenet->m_pParent;
+        }
+        pNext = pParent;
+        
+    }
+    return pNext;
+}
+
+
+
+
+
+
+
+
+
 
