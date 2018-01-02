@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CC00F3F51F90601800759B37 /* link_list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC00F3F41F90601800759B37 /* link_list.cpp */; };
+		CC054A021FA2CD78003A6A00 /* arithmetic_data_manipulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC054A011FA2CD78003A6A00 /* arithmetic_data_manipulation.cpp */; };
 		CC216C5B1F9ED5F50041B60A /* stack_queue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC216C5A1F9ED5F50041B60A /* stack_queue.cpp */; };
 		CC2D974F1F95A5A3005CDC21 /* tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC2D974E1F95A5A3005CDC21 /* tree.cpp */; };
 		CCB9B5281F7F3DF900316013 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = CCB9B5271F7F3DF900316013 /* main.mm */; };
@@ -29,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		CC00F3F41F90601800759B37 /* link_list.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = link_list.cpp; sourceTree = "<group>"; };
+		CC054A011FA2CD78003A6A00 /* arithmetic_data_manipulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = arithmetic_data_manipulation.cpp; sourceTree = "<group>"; };
 		CC216C5A1F9ED5F50041B60A /* stack_queue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stack_queue.cpp; sourceTree = "<group>"; };
 		CC2D974E1F95A5A3005CDC21 /* tree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tree.cpp; sourceTree = "<group>"; };
 		CCB9B5241F7F3DF900316013 /* Arithmetic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Arithmetic; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +75,7 @@
 				CC00F3F41F90601800759B37 /* link_list.cpp */,
 				CC2D974E1F95A5A3005CDC21 /* tree.cpp */,
 				CC216C5A1F9ED5F50041B60A /* stack_queue.cpp */,
+				CC054A011FA2CD78003A6A00 /* arithmetic_data_manipulation.cpp */,
 			);
 			path = Arithmetic;
 			sourceTree = "<group>";
@@ -137,6 +140,7 @@
 				CC216C5B1F9ED5F50041B60A /* stack_queue.cpp in Sources */,
 				CCB9B5331F7F720000316013 /* string.cpp in Sources */,
 				CCB9B5281F7F3DF900316013 /* main.mm in Sources */,
+				CC054A021FA2CD78003A6A00 /* arithmetic_data_manipulation.cpp in Sources */,
 				CCB9B5311F7F3E7900316013 /* array.cpp in Sources */,
 				CC2D974F1F95A5A3005CDC21 /* tree.cpp in Sources */,
 				CC00F3F51F90601800759B37 /* link_list.cpp in Sources */,
