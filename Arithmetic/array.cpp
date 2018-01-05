@@ -173,12 +173,58 @@ int MinInOrder(int* number, int index1, int index2)
 }
 
 
+/*  调整数组顺序使奇数位于偶数前面
+ 题目：输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有奇数位于数组的前半部分，所有偶数位于数组的后半部分。
+ */
 
+void ReorderOddEven(int *pData, unsigned int length)
+{
+    if (pData == nullptr || length <= 0) {
+        return;
+    }
+    
+    int *pLeft = pData, *pRight = pData + length - 1;
+    
+    while (pRight > pLeft) {
+        if ((*pLeft & 0x1) != 0) {
+            pLeft ++;
+        } else {
+            if ((*pRight & 0x1) == 0) {
+                pRight --;
+            } else {
+                int temp = *pLeft;
+                *pLeft = *pRight;
+                *pRight = temp;
+            }
+        }
+    }
+}
 
-
-
-
-
+void ReorderOddEvenOriginal(int *pData, unsigned int length)
+{
+    if (pData == nullptr || length <= 0) {
+        return;
+    }
+    
+    int *pLeft = pData, *pRight = pData + length - 1;
+    
+    while (pRight > pLeft) {
+        
+        while (pRight > pLeft && (*pLeft & 0x1) != 0) {
+            pLeft ++;
+        }
+        
+        while (pRight > pLeft && (*pRight & 0x1) == 0) {
+            pRight --;
+        }
+        
+        if (pRight > pLeft) {
+            int temp = *pLeft;
+            *pLeft = *pRight;
+            *pRight = temp;
+        }
+    }
+}
 
 
 

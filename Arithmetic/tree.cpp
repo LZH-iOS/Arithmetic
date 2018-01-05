@@ -127,6 +127,91 @@ BinaryTreeNode* GetNext(BinaryTreeNode *pNode)
     return pNext;
 }
 
+/* 树的子结构
+ 题目：输入两颗二叉树A和B， 判断B是不是A的子结构。
+ 
+ */
+
+bool DoseTree1HaveTree2(BinaryTreeNode* pRoot1, BinaryTreeNode* pRoot2)
+{
+    if (pRoot2 == NULL) {
+        return true;
+    }
+    
+    if (pRoot1 == NULL) {
+        return false;
+    }
+    
+    if (pRoot1->m_nvalue != pRoot2->m_nvalue) {
+        return false;
+    }
+    
+    return DoseTree1HaveTree2(pRoot1->m_pLeft, pRoot2->m_pLeft) && DoseTree1HaveTree2(pRoot1->m_pRight, pRoot2->m_pRight);
+}
+
+bool HasSubtree(BinaryTreeNode* pRoot1, BinaryTreeNode* pRoot2)
+{
+    bool result = false;
+    
+    if (pRoot1 != NULL && pRoot2 != NULL) {
+        if (pRoot1->m_nvalue == pRoot2->m_nvalue) {
+            return DoseTree1HaveTree2(pRoot1, pRoot2);
+        }
+        
+        if (!result) {
+            result = HasSubtree(pRoot1->m_pLeft, pRoot2);
+        }
+        
+        if (!result) {
+            result =HasSubtree(pRoot1->m_pRight, pRoot2);
+        }
+    }
+    
+    return result;
+}
+
+/* 二叉树的镜像
+ 题目：请完成一个函数，输入一个二叉树，该函数输出它的镜像。
+ 
+            8                       8
+        6      10               10      6
+      5   7  9   11           11   9  7   5
+ 
+ */
+
+void MirrorRecursively(BinaryTreeNode* pNode)
+{
+    if (pNode == NULL || (pNode->m_pLeft == NULL && pNode->m_pRight == NULL)) {
+        return;
+    }
+    
+    BinaryTreeNode* pTemp = pNode->m_pLeft;
+    pNode->m_pLeft = pNode->m_pRight;
+    pNode->m_pRight = pTemp;
+    MirrorRecursively(pNode->m_pLeft);
+    MirrorRecursively(pNode->m_pRight);
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

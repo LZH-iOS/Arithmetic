@@ -133,6 +133,7 @@ int NumberOf1_3(int n)
     return count;
 }
 
+/***********大数问题*************/
 
 /*
  题目：实现函数 double Power(double base, int exponent), 求base的exponent次方。不得使用库函数，同时不需要考虑大数问题。
@@ -151,22 +152,6 @@ double PowerWithUnsignedExponent(double base, unsigned int exponent)
 {
     double result = 1.0;
     for (int i=0; i<= exponent; ++i) {
-        result *= base;
-    }
-    return result;
-}
-
-double PowerWithUnsignedExponent_better(double base, unsigned int exponent)
-{
-    if (exponent == 0) {
-        return 1;
-    }
-    if (exponent == 1) {
-        return base;
-    }
-    double result = PowerWithUnsignedExponent(base, exponent >> 1);
-    result *= result;
-    if ((exponent & 0x1) == 1) {
         result *= base;
     }
     return result;
@@ -194,10 +179,113 @@ double Power(double base, int exponent)
     return result;
 }
 
+//         n/2     n/2
+//  n   | a     * a                 (n为偶数)
+// a  = |  (n-1)/2     (n-1)/2
+//      | a         * a        * a  (n为奇数)
+double PowerWithUnsignedExponent_better(double base, unsigned int exponent)
+{
+    if (exponent == 0) {
+        return 1;
+    }
+    if (exponent == 1) {
+        return base;
+    }
+    double result = PowerWithUnsignedExponent_better(base, exponent >> 1);
+    result *= result;
+    //判断是奇数还是偶数
+    if ((exponent & 0x1) == 1) {
+        result *= base;
+    }
+    return result;
+}
+
 /*
  题目：输入数字n, 按顺序打印出从1最大的n位十进制数。比如输入3，则打印出1、2、3一直到最大的3位数即999.
  */
+bool Increment(char* number)
+{
+    bool isOverflow = false;
+    int nTakeOver = 0;
+    int nLength = (int)strlen(number);
+    for (int i = nLength - 1; i >= 0; i--) {
+        int nSum = number[i] - '0' + nTakeOver;
+        if (i == nLength - 1) {
+            nSum ++;
+        }
+        if (nSum >= 10) {
+            if (i == 0) {
+                isOverflow = true;
+            } else {
+                nSum -= 10;
+                nTakeOver = 1;
+                number[i] = '0' +nSum;
+            }
+        } else {
+            number[i] = '0' + nSum;
+            break;
+        }
+    }
+    return isOverflow;
+}
 
+void PrintNumber(char* number)
+{
+    bool isBeginning0 = true;
+    int nLength = (int)strlen(number);
+    for (int i = 0; i < nLength; i++) {
+        if (isBeginning0 && number[i] != '0') {
+            isBeginning0 = false;
+        }
+        if (!isBeginning0) {
+            printf("%c", number[i]);
+        }
+    }
+    printf("\t");
+}
+
+void Print1ToMaxOfDigits(int n)
+{
+    if (n < 0) {
+        return;
+    }
+    char *number = new char[n + 1];
+    memset(number, '0', n);
+    number[n] = '\0';
+    while (!Increment(number)) {
+        PrintNumber(number);
+    }
+}
+
+//全排列
+void Print1ToMaxOfNDigitsRecursively(char* number, int length, int index)
+{
+    if (index == length - 1) {
+        PrintNumber(number);
+        return;
+    }
+    for (int i = 0; i < 10; i++) {
+        number[index + 1] = i + '0';
+        Print1ToMaxOfNDigitsRecursively(number, length, index + 1);
+    }
+}
+
+void Print1ToMaxOfDigits_Recursively(int n)
+{
+    if (n < 0) {
+        return;
+    }
+    char *number = new char[n+1];
+    memset(number, '0', n);
+    for (int i = 0; i < 10; i++) {
+        number[0] = i + '0';
+        Print1ToMaxOfNDigitsRecursively(number, n, 0);
+    }
+}
+
+/*
+ 题目：定义一个函数，在该函数中实现任意两个整数的加法。
+ */
 
 
 /***********回溯法*************/
@@ -216,7 +304,7 @@ bool hasPathCore(const char* matrix, int rows, int cols, int row, int col, const
     bool hasPath = false;
     if (row >= 0 && row < rows && col >=0 && col < cols && matrix[row * cols + row] == str[pathLength] && !visited[row * cols + col]) {
         ++pathLength;
-        visited[row * cols + col] = false;
+        visited[row * cols + col] = true;
         hasPath = hasPathCore(matrix, rows, cols, row, col - 1, str, pathLength, visited)
         || hasPathCore(matrix, rows, cols, row, col + 1, str, pathLength, visited)
         || hasPathCore(matrix, rows, cols, row - 1, col, str, pathLength, visited)
@@ -253,3 +341,94 @@ bool hasPath(char* matrix, int rows, int cols, char* str)
  题目：地上有一个m行n列的方格。一个机器人从坐标（0，0）的格子开始移动，它每次可以向左、右、上、下移动一格，但不能进入行坐标和列坐标的数位之和大于k的格子。例如，当k为18时，机器人能够进入方格（35，37），因为3+5+3+7=18.但它不能进入方格（35，38），因为3+5+3+8=19.请问该机器人能够到达多少个格子？
  */
 
+int getDigitSun(int number)
+{
+    int sum = 0;
+    while (number > 0) {
+        sum += number % 10;
+        number /= 10;
+    }
+    return sum;
+}
+
+int movingCountCore(int threshold, int row, int rows, int col, int cols, bool* visited)
+{
+    int count = 0;
+    if (row >= 0 && row < rows && col >=0 && col < cols && !visited[row * col + col] && (getDigitSun(row) + getDigitSun(col) <= threshold)) {
+        visited[row * col + col] = true;
+        count = 1 + movingCountCore(threshold, row + 1, rows, col, cols, visited) + movingCountCore(threshold, row - 1, row, col, cols, visited) + movingCountCore(threshold, row, rows, col + 1, col, visited) + movingCountCore(threshold, row, rows, col - 1, cols, visited);
+    }
+    return count;
+}
+
+int movingCount(int threshold, int rows, int cols)
+{
+    if (threshold < 0 || rows < 0 || cols < 0) {
+        return 0;
+    }
+    bool *visited = new bool[rows * cols];
+    memset(visited, 0, rows * cols);
+    int count = movingCountCore(threshold, 0, rows, 0, cols, visited);
+    delete [] visited;
+    return count;
+}
+
+/* 顺时针打印矩阵
+ 题目：输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字。例如：如果输入如下矩阵：
+    1   2   3   4
+    5   6   7   8
+    9   10  11  12
+    13  14  15  16
+ 则依次打印出数字1、2、3、4、8、12、16、15、14、13、9、5、6、7、11、10.
+ */
+
+void PrintMatrixInCircle(int** numbers, int cols, int rows, int start)
+{
+    int endX = cols - 1 - start;
+    int endY = rows - 1 - start;
+    
+    //从左到右打印一行
+    for (int i = start; i <= endX; ++i) {
+        int number = numbers[start][i];
+        printf("%d", number);
+    }
+    
+    //从上到下打印一列
+    if (endY > start) {
+        for (int i = start + 1; i <= endY; ++i) {
+            int number = numbers[i][endX];
+            printf("%d", number);
+        }
+    }
+    
+    //从右到左打印一行
+    if (endY > start && endX > start ) {
+        for (int i = endX - 1; i >= start; i--) {
+            int number = numbers[endY][i];
+            printf("%d", number);
+        }
+    }
+    
+    //从下到上打印一列
+    
+    if (endY - 1 > start && endX > start) {
+        for (int i = endY - 1; i > start; i--) {
+            int number = numbers[i][start];
+            printf("%d", number);
+        }
+    }
+}
+
+void PrintMatrixClockwisely(int** number, int cols, int rows)
+{
+    if (number == NULL || cols <= 0 || rows <= 0) {
+        return;
+    }
+    
+    int start = 0;
+    
+    while (cols > start * 2 && rows > start * 2) {
+        PrintMatrixInCircle(number, cols, rows, start);
+        start++;
+    }
+}
