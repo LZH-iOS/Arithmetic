@@ -257,6 +257,88 @@ ListNode* MergeOriginal(ListNode* pHead1, ListNode* pHead2)
     return pMergeHeard;
 }
 
+/*  复杂链表的复制
+ 题目：请实现函数ComplexListNode* Clone(ComplexListNode* pHead),复制一个复杂链表。在复杂链表中，每个结点除了有一个m_pNext指针指向下一个结点外，还有一个m_pSibling指向链表中的任意结点或者NULL。
+ */
+
+struct ComplexListNode
+{
+    int                 m_nValue;
+    ComplexListNode*    m_pNext;
+    ComplexListNode*    m_pSibling;
+};
+
+
+void CloneNodes(ComplexListNode* pHead)
+{
+    ComplexListNode *pNode = pHead;
+    while (pNode != NULL) {
+        ComplexListNode *pNodeNew = new ComplexListNode();
+        pNodeNew->m_nValue = pNode->m_nValue;
+        pNodeNew->m_pNext = pNode->m_pNext;
+        pNodeNew->m_pSibling = NULL;
+        pNode->m_pNext = pNodeNew;
+        pNode = pNodeNew->m_pNext;
+    }
+}
+
+void ConnectSiblingNodes(ComplexListNode* pHead)
+{
+    ComplexListNode *pNode = pHead;
+    
+    while (pNode != NULL) {
+        ComplexListNode *pClone = pNode->m_pNext;
+        ComplexListNode *pCloneSibLing = pNode->m_pSibling;
+        if (pCloneSibLing != NULL) {
+            pClone->m_pSibling = pCloneSibLing->m_pNext;
+        }
+        pNode = pClone->m_pNext;
+    }
+}
+
+ComplexListNode* ReconnectNodes(ComplexListNode* pHead)
+{
+    if (pHead == NULL) {
+        return NULL;
+    }
+    
+    ComplexListNode *pHeadClone = pHead->m_pNext;
+    ComplexListNode *pNode = pHead;
+    ComplexListNode *pNodeClone = pHeadClone;
+    while (pNode != NULL) {
+        pNode->m_pNext = pNodeClone->m_pNext;
+        pNode = pNode->m_pNext;
+        pNodeClone->m_pNext = pNode->m_pNext;
+        pNodeClone = pNodeClone->m_pNext;
+    }
+    
+    return pHeadClone;
+}
+
+ComplexListNode* Clone(ComplexListNode* pHead)
+{
+    CloneNodes(pHead);
+    ConnectSiblingNodes(pHead);
+    return ReconnectNodes(pHead);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

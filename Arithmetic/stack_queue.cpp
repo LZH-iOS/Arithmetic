@@ -109,5 +109,118 @@ T CStack<T>::pop()
     return node;
 }
 
+/*  包含min函数的栈
+ 题目：定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的min函数。在该栈中，调用min、push及pop的时间复杂度都是O(1).
+ */
+
+template <typename T>
+class Stack {
+public:
+    Stack();
+    ~Stack();
+    void push(const T& node);
+    T pop();
+    T Min();
+    
+private:
+    std::stack<T> stack1; //主栈
+    std::stack<T> stack2; //辅助栈
+};
+
+template <typename T>
+T Stack<T>::Min()
+{
+    static_assert(stack1.size() && stack2.size(), "error");
+    return stack2.top();
+}
+
+template <typename T>
+T Stack<T>::pop()
+{
+    static_assert(stack1.size() && stack2.size(), "error");
+    stack1.pop();
+    stack2.pop();
+}
+
+template <typename T>
+void Stack<T>::push(const T& value)
+{
+    stack1.push(value);
+    if (stack2.size() == 0 || value < stack2.top()) {
+        stack2.push(value);
+    } else {
+        stack2.push(stack2.top());
+    }
+}
+
+/*  栈的压入、弹出序列
+ 题目：输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如序列1、2、3、4、5是某栈的压入序列，序列4、5、3、2、1是该压栈序列对应的一个弹出序列，但4、3、5、1、2就不可能是该压栈序列的弹出序列。
+ */
+
+bool IsPopOrder(const int* pPush, const int* pPop, int length)
+{
+    if (pPush == NULL || pPop == NULL || length == 0) {
+        return false;
+    }
+    
+    std::stack<int> stackData;
+    int index = 0;
+    for (int i = 0; i < length ; ++i) {
+        int pop = pPop[i];
+        if (stackData.size() && stackData.top() == pop) {
+            stackData.pop();
+        } else {
+            if (index == length) {
+                return false;
+            } else {
+                for (int i = index; i < length; ++i) {
+                    index++;
+                    if (pPush[i] == pop) {
+                        break;
+                    } else {
+                        stackData.push(pPush[i]);
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+bool isOrderOriginal(const int* pPush, const int* pPop, int nLength)
+{
+    bool bPossible = false;
+    
+    if (pPush != NULL && pPop != NULL && nLength > 0) {
+        const int* pNextPush = pPush;
+        const int* pNextPop = pPop;
+        
+        std::stack<int>stackData;
+        
+        while (pNextPop - pPop < nLength) {
+            while (stackData.empty() || stackData.top() != *pNextPop) {
+                if (pNextPush - pPush == nLength) {
+                    break;
+                }
+                stackData.push(*pNextPush);
+                pNextPush++;
+            }
+            
+            if (stackData.top() != *pNextPop) {
+                break;
+            }
+            
+            stackData.pop();
+            pNextPop++;
+        }
+        
+        if (stackData.empty() && pNextPop - pPop == nLength) {
+            bPossible = true;
+        }
+    }
+    
+    return bPossible;
+}
+
 
 

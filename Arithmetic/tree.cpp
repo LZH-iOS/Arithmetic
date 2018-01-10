@@ -7,6 +7,8 @@
 //
 
 #include <stdio.h>
+#include "deque"
+#include "vector"
 
 /*
  二叉搜索树：左子节点总小于或等于根节点，而右子节点总是大于或等于根节点
@@ -193,18 +195,179 @@ void MirrorRecursively(BinaryTreeNode* pNode)
     
 }
 
+/*  从上往下打印二叉树
+ 题目：从上往下打印出二叉树的每个结点，同一层的结点按照从左到右的顺序打印。例如输入如下二叉树，则依次打印出8、6、10、5、7、9、11.
+ 
+        8
+    6      10
+  5   7  9   11
+ 
+ */
+
+void PrintFromToBottom(BinaryTreeNode *pTreeRoot)
+{
+    if (pTreeRoot == NULL) {
+        return;
+    }
+    
+    std::deque<BinaryTreeNode *> dequeTreeNode;
+    
+    dequeTreeNode.push_back(pTreeRoot);
+    
+    while (dequeTreeNode.size()) {
+        BinaryTreeNode *pNode = dequeTreeNode.front();
+        dequeTreeNode.pop_front();
+        printf("%d ", pTreeRoot->m_nvalue);
+        
+        if (pNode->m_pLeft) {
+            dequeTreeNode.push_back(pNode->m_pLeft);
+        }
+        
+        if (pNode->m_pRight) {
+            dequeTreeNode.push_back(pNode->m_pRight);
+        }
+    }
+    
+}
+
+/*  二叉搜索树的后序遍历序列
+ 题目：输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则返回true，否则返回false，假设输入的数组的任意两个数字都不相同。
+ */
+
+bool VerifySquenceOfBST(int sequence[], int length)
+{
+    if (sequence == NULL || length <= 0) {
+        return false;
+    }
+    
+    int root = sequence[length - 1];
+    
+    int i = 0;
+    
+    while (sequence[i] < root) {
+        i++;
+    }
+    
+    for (int j = i; j < length - 1; j++) {
+        if (sequence[j] < root) {
+            return false;
+        }
+    }
+    
+    bool left = true;
+    if (i > 0) {
+        left = VerifySquenceOfBST(sequence, i);
+    }
+    
+    bool right = true;
+    
+    if (i < length - 1) {
+        right  = VerifySquenceOfBST(sequence + i, length - 1 - i);
+    }
+    
+    return left && right;
+}
+
+/*  二叉树中和为某一值的路径
+ 题目：输入一颗二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。从树的根结点开始往下一直到叶子结点所经过的结点形成一条路径。
+ */
+
+struct stackWithSum
+{
+    std::vector<int> vec;
+    int sum;
+    
+    stackWithSum () {
+        sum = 0;
+    }
+};
+
+void findPathCore(BinaryTreeNode *pRoot, int expectedSum, stackWithSum& stack)
+{
+    if (pRoot == NULL) {
+        if (stack.sum == expectedSum) {
+            for (std::vector<int>::iterator iter = stack.vec.begin(); iter != stack.vec.end(); ++iter) {
+                printf("%d ", *iter);
+            }
+        } else {
+            stack.vec.pop_back();
+        }
+        return;
+    }
+    
+    stack.vec.push_back(pRoot->m_nvalue);
+    stack.sum += pRoot->m_nvalue;
+    
+    findPathCore(pRoot->m_pLeft, expectedSum, stack);
+    findPathCore(pRoot->m_pRight, expectedSum, stack);
+    
+    if (stack.vec.size()) {
+        stack.sum -= pRoot->m_nvalue;
+        stack.vec.pop_back();
+    }
+}
+
+void FindPath(BinaryTreeNode *pRoot, int expectedSum)
+{
+    if (pRoot == NULL && expectedSum <= 0) {
+        return;
+    }
+    
+    stackWithSum stack;
+    
+    findPathCore(pRoot, expectedSum, stack);
+    
+}
+
+/*  二叉搜索树与双向链表
+ 题目：输入一颗二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。比如输入如下图二叉搜索树，则输出转换之后的排序双向链表。
+        10
+      6     14   ==》4<==>6<==>8<==>10<==>12<==>14<==>16
+    4   8 12  16
+ */
 
 
+void ConvertNode(BinaryTreeNode* pNode, BinaryTreeNode** pLastNodeInList)
+{
+    if (pNode == NULL) {
+        return;
+    }
+    
+    BinaryTreeNode *pCurrent = pNode;
+    if (pCurrent->m_pLeft != NULL) {
+        ConvertNode(pCurrent->m_pLeft, pLastNodeInList);
+    }
+    
+    pCurrent->m_pLeft = *pLastNodeInList;
+    
+    if (*pLastNodeInList != NULL) {
+        (*pLastNodeInList)->m_pRight = pCurrent;
+    }
+    *pLastNodeInList = pCurrent;
+    
+    if (pNode->m_pRight != NULL) {
+        ConvertNode(pNode->m_pRight, pLastNodeInList);
+    }
+}
 
-
-
-
-
-
-
-
-
-
+BinaryTreeNode* Convert(BinaryTreeNode* pRootofTree)
+{
+    if (pRootofTree == NULL) {
+        return NULL;
+    }
+    
+    BinaryTreeNode *pLastNodeInList = NULL;
+    
+    ConvertNode(pRootofTree, &pLastNodeInList);
+    
+    BinaryTreeNode *pHeadOfList = pLastNodeInList;
+    
+    while (pHeadOfList != NULL && pHeadOfList->m_pLeft != NULL) {
+        pHeadOfList = pHeadOfList->m_pLeft;
+    }
+    
+    return pHeadOfList;
+}
 
 
 

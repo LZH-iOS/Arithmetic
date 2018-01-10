@@ -49,3 +49,63 @@ void ReplaceBlank(char string[], int length)
         --indexOfOriginal;
     }
 }
+
+/*  字符串的排列
+ 题目：输入一个字符串，打印出该字符串中字符的所有排列。例如输入字符串abc，则打印出由字符a、b、c所能排列出来的所有字符串abc、acb、bac、bca、cab和cba。
+ */
+
+void PermutationCore(char *pStr, char *pBegin)
+{
+    if (*pBegin == '\0') {
+        printf("%s\n", pStr);
+    } else {
+        for (char *pCh = pBegin; *pCh != '\0'; ++pCh) {
+            char temp = *pCh;
+            *pCh = *pBegin;
+            *pBegin = temp;
+            
+            PermutationCore(pStr, pBegin + 1);
+            
+            temp = *pCh;
+            *pCh = *pBegin;
+            *pBegin = temp;
+        }
+    }
+}
+
+void Permutation(char *pStr)
+{
+    if (pStr == NULL) {
+        return;
+    }
+    PermutationCore(pStr, pStr);
+}
+
+/*  字符串的排列扩展
+    1.求n个字符串中长度为m的组合。
+      分解为分别n-1个字符串中长度为m-1的组合，以及求n-1个字符串的长度为m的组合。
+ 
+    2.在8 * 8的国际象棋上包房8个皇后，使其不能相互攻击，即任意两个皇后不得处于同一行、同一列或者同一对角线上。
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
