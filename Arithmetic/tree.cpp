@@ -41,7 +41,7 @@ BinaryTreeNode* ConstructCore(int* startPreorder, int* endPreorder, int* startIn
     root->m_nvalue = startPreorder[0];
     root->m_pLeft = root->m_pRight = nullptr;
     if (startPreorder == endPreorder) {
-        if (startInorder == endInorder && *startPreorder != * startInorder) {
+        if (startInorder == endInorder && *startPreorder == * startInorder) {
             return root;
         } else {
             throw "Invalid input";

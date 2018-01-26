@@ -7,6 +7,7 @@
 //
 
 #include <stdio.h>
+#include <vector>
 
 /******数组中重复的数字******/
 /*
@@ -132,6 +133,17 @@ bool find(int *array, int rows, int columns, int number)
  关键点：二分查找，p1指针指向第一个元素，p2指针指向最后一个元素
  */
 
+int MinInOrder(int* number, int index1, int index2)
+{
+    int result = number[index1];
+    for (int i = index1 + 1; i<= index2; ++i) {
+        if (result > number[i]) {
+            result = number[i];
+        }
+    }
+    return result;
+}
+
 int Min(int* numbers, int length)
 {
     if (nullptr == numbers || length <= 0) {
@@ -149,7 +161,9 @@ int Min(int* numbers, int length)
         
         //如果下表为index1、index2和indexMid指向的三个数字相等，则只能顺序查找
         
-        
+        if (numbers[index1] == numbers[index2] && numbers[indexMid] == numbers[index1]) {
+            return MinInOrder(numbers, index1, index2);
+        }
         
         if (numbers[indexMid] >= numbers[index1]) {
             index1 = indexMid;
@@ -158,17 +172,6 @@ int Min(int* numbers, int length)
         }
     }
     return numbers[indexMid];
-}
-
-int MinInOrder(int* number, int index1, int index2)
-{
-    int result = number[index1];
-    for (int i = index1 + 1; i<= index2; ++i) {
-        if (result > number[i]) {
-            result = number[i];
-        }
-    }
-    return result;
 }
 
 
@@ -224,6 +227,152 @@ void ReorderOddEvenOriginal(int *pData, unsigned int length)
         }
     }
 }
+
+/*  数组中出现次数超过一半的数字
+ 题目：数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2.
+ */
+
+bool CheckMoreThanHalf(int *numbers, int length, int number)
+{
+    int times = 0;
+    for (int i=0; i<length; i++) {
+        if (numbers[i] == number) {
+            times ++;
+        }
+    }
+    
+    return times > length >> 1;
+}
+
+int MoreThanHalfNum(int* number, int length)
+{
+    if (number == NULL || length <= 0) {
+        return 0;
+    }
+    
+    int result = number[0];
+    int times = 1;
+    
+    for (int i = 1; i < length; ++i) {
+        if (number[i] == result) {
+            times++;
+        } else {
+            times --;
+        }
+        if (times == 0) {
+            result = number[i];
+        }
+    }
+    if (!CheckMoreThanHalf(number, length, result)) {
+        return 0;
+    }
+    return result;
+}
+
+/*  最小的k个数
+ 题目：输入n个整数，找出其中最小的k个数。例如输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4.
+ */
+
+
+
+/* 连续子数组的最大和
+ 题目：输入一个整形数组，数组里有正数也有负数。数组中一个或连续多个整数组成一个子数组。求所有子数组的和的最大值。要求时间复杂度为O(n)。
+ */
+
+void CountSubArr(int *numbers, int index, int length, std::vector<int> &vec)
+{
+    if (index > length - 1) {
+        return;
+    }
+    
+    int count = 0;
+    for (int i = index; i < length; i++) {
+        count += numbers[i];
+        vec.push_back(count);
+        //放在for循环里面递归和外面递归是一样的
+//        CountSubArr(numbers, index + 1, length, vec);
+    }
+    
+    CountSubArr(numbers, index + 1, length, vec);
+}
+
+bool g_InvalidInput = false;
+
+int FindGreateSumOfSubArray(int *numbers, int length)
+{
+    if (numbers == NULL || length <= 0) {
+        g_InvalidInput = true;
+        return 0;
+    }
+    
+    std::vector<int> vec;
+    CountSubArr(numbers, 0, length, vec);
+    
+    int sum = vec[0];
+    for (std::vector<int>::iterator iter = vec.begin(); iter != vec.end(); ++iter) {
+        if (*iter > sum) {
+            sum = *iter;
+        }
+    }
+    
+    return sum;
+}
+
+int FindGreateSumOfSubArrayOriginal(int *numbers, int length)
+{
+    if (numbers == NULL || length <= 0) {
+        g_InvalidInput = true;
+        return 0;
+    }
+    
+    int pCurGreateSum = numbers[0];
+    int pGreateSum = pCurGreateSum;
+    for (int i = 1; i < length; ++i) {
+        pCurGreateSum += numbers[i];
+        if (pCurGreateSum < numbers[i]) {
+            pCurGreateSum = numbers[i];
+        }
+        if (pCurGreateSum > pGreateSum) {
+            pGreateSum = pCurGreateSum;
+        }
+    }
+    
+    return pGreateSum;
+}
+
+/*  从1到n整数中1出现的次数
+ 题目：输入一个整数n，求从1到n这n个整数的十进制表示中1出现的次数。例如输入12，从1到12这些整数中包含1的数字有1，10，11和12，1一共出现了5次。
+ */
+
+int NumberOf1(unsigned int n)
+{
+    int count = 0;
+    while (n) {
+        if (n % 10 == 1) {
+            ++count;
+        }
+        n/=10;
+    }
+    return count;
+}
+
+int NumberOf1Between1AndN(unsigned int n)
+{
+    int count = 0;
+    for (int i=1; i<=n; ++i) {
+        count+= NumberOf1(n);
+    }
+    return count;
+}
+
+
+
+
+
+
+
+
+
 
 
 
