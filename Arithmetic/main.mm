@@ -8,6 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+void quickSort(int *num, int left, int right)
+{
+    if (left > right) {
+        return;
+    }
+    
+}
+
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         

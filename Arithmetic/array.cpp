@@ -284,7 +284,7 @@ void CountSubArr(int *numbers, int index, int length, std::vector<int> &vec)
     if (index > length - 1) {
         return;
     }
-    
+
     int count = 0;
     for (int i = index; i < length; i++) {
         count += numbers[i];
@@ -292,7 +292,7 @@ void CountSubArr(int *numbers, int index, int length, std::vector<int> &vec)
         //放在for循环里面递归和外面递归是一样的
 //        CountSubArr(numbers, index + 1, length, vec);
     }
-    
+
     CountSubArr(numbers, index + 1, length, vec);
 }
 
@@ -304,17 +304,17 @@ int FindGreateSumOfSubArray(int *numbers, int length)
         g_InvalidInput = true;
         return 0;
     }
-    
+
     std::vector<int> vec;
     CountSubArr(numbers, 0, length, vec);
-    
+
     int sum = vec[0];
     for (std::vector<int>::iterator iter = vec.begin(); iter != vec.end(); ++iter) {
         if (*iter > sum) {
             sum = *iter;
         }
     }
-    
+
     return sum;
 }
 
@@ -324,7 +324,7 @@ int FindGreateSumOfSubArrayOriginal(int *numbers, int length)
         g_InvalidInput = true;
         return 0;
     }
-    
+
     int pCurGreateSum = numbers[0];
     int pGreateSum = pCurGreateSum;
     for (int i = 1; i < length; ++i) {
@@ -336,7 +336,7 @@ int FindGreateSumOfSubArrayOriginal(int *numbers, int length)
             pGreateSum = pCurGreateSum;
         }
     }
-    
+
     return pGreateSum;
 }
 

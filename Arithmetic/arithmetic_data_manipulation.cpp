@@ -157,12 +157,12 @@ double PowerWithUnsignedExponent(double base, unsigned int exponent)
     return result;
 }
 
-bool g_InvalidInput = false;
+bool l_InvalidInput = false;
 double Power(double base, int exponent)
 {
-    g_InvalidInput = false;
+    l_InvalidInput = false;
     if (equal(base, 0.0) && exponent < 0) {
-        g_InvalidInput = true;
+        l_InvalidInput = true;
         return 0.0;
     }
     
